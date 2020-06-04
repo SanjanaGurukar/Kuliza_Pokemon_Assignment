@@ -1,26 +1,53 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import PokeCompare from './PokeCompare';
+import PokeDetails from './PokeDetails';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component  {
+
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        data : null,
+        showView : false,
+        showCompare : false
+      };
+    }
+
+    componentDidMount(){
+      this.renderMyData();
+    }
+
+    renderMyData(){
+        fetch('https://pokeapi.co/api/v2/pokemon/')
+            .then(response => response.json())
+            .then(responseJSON => this.setState({data : responseJSON}))
+    }
+    
+      view() {
+        this.setState({ showView: true });
+      }
+
+      compare() {
+        this.setState({ showCompare: true });
+      }
+
+    render(){
+        return(
+        <div className="App">
+          <div>
+            header
+          </div>
+        <header className="App-header">
+          <h1>Gotta catch ‘em all</h1>
+          <button className="poke-button" onClick={() => this.view()}>View Pokémon Details</button>
+          <button className="poke-button" onClick={() => this.compare()}>Compare Pokémon</button>
+          { this.state.showView ? <PokeDetails data={this.state.data}/> : null }
+          { this.state.showCompare ? <PokeCompare data={this.state.data}/> : null }
+        </header>
+        </div>
+
+        );
+    }
 }
-
-export default App;
